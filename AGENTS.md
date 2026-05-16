@@ -46,6 +46,7 @@ Copy `.env.example` to `.env`. Default `PORT=5500`.
 - **Imports**: Use `.js` extensions in TypeScript import paths (NodeNext resolution).
 - **MVC**: Add routes in `src/routes/`, handlers in `src/controllers/`, shared logic in `src/middleware/` or future `src/services/`.
 - **Return types**: Prefer implicit return types; see `.cursor/rules/typescript-implicit-return-types.mdc`.
+- **Commits**: [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary); group changes logically; no `Co-authored-by: Cursor` trailers — see `.cursor/rules/conventional-commits.mdc`.
 
 ## When extending
 
