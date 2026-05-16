@@ -1,0 +1,59 @@
+---
+description: Conventional Commits format; never add Cursor co-author trailers
+alwaysApply: true
+---
+
+# Git commits
+
+Follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/#summary) for every commit message.
+
+## Format
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+- **Subject**: lowercase type, optional scope in parentheses, colon + space, then a short imperative summary (no period).
+- **Body** (optional): blank line after subject; explain *why*, not a file list.
+- **Footers** (optional): e.g. `BREAKING CHANGE:`, `Refs: #123` — not for co-authors unless the user asks.
+
+## Types
+
+| Type | Use for |
+|------|---------|
+| `feat` | New user-facing behavior |
+| `fix` | Bug fix |
+| `build` | Dependencies, build tooling |
+| `chore` | Maintenance (configs, cursor rules) |
+| `docs` | Documentation only |
+| `refactor` | Code change without feat/fix |
+| `test` | Tests |
+| `ci` | CI config |
+
+Use scopes when helpful: `feat(home):`, `feat(app):`, `build(deps):`.
+
+## Grouping
+
+Prefer **several focused commits** over one large commit (deps → app wiring → views → routes/controllers → docs).
+
+## Co-authored-by
+
+**Never** add this line (or any Cursor agent co-author trailer) unless the user explicitly requests it:
+
+```
+Co-authored-by: Cursor <cursoragent@cursor.com>
+```
+
+## Examples
+
+```
+build(deps): add ejs and @types/ejs
+
+feat(home): serve home page via mvc controller
+
+docs: add AGENTS.md project guide
+```
