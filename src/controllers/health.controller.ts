@@ -1,5 +1,11 @@
 import type { Request, Response } from 'express';
+import { prisma } from '../lib/prisma.js';
 
-export function getHealth(_req: Request, res: Response): void {
-  res.json({ status: 'ok' });
+export async function getHealth(_req: Request, res: Response) {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.json({ status: 'ok', database: 'connected' });
+  } catch {
+    res.status(503).json({ status: 'degraded', database: 'disconnected' });
+  }
 }
