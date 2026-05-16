@@ -1,16 +1,20 @@
-import path from 'node:path';
-import express from 'express';
-import { router } from './routes/index.js';
-import { errorHandler } from './middleware/error.middleware.js';
+import path from "node:path";
+import express from "express";
+import { router } from "./routes/index.js";
+import { errorHandler } from "./middleware/error.middleware.js";
 
 export const app = express();
 
-const viewsPath = path.join(process.cwd(), 'views');
-const publicPath = path.join(process.cwd(), 'public');
+const viewsPath = path.join(process.cwd(), "views");
+const publicPath = path.join(process.cwd(), "public");
 
-app.set('view engine', 'ejs');
-app.set('views', viewsPath);
+app.set("view engine", "ejs");
+app.set("views", viewsPath);
 app.use(express.static(publicPath));
+
+//config req.body to parse json and urlencoded
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(router);
 app.use(errorHandler);
