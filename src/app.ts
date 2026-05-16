@@ -17,4 +17,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(router);
+
+app.use((_req, res) => {
+  res.status(404).render('errors/404');
+});
+
 app.use(errorHandler);
