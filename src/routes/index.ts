@@ -1,10 +1,8 @@
 import { Router } from 'express';
+import { getHome } from '../controllers/home.controller.js';
 import { healthRouter } from './health.routes.js';
 
 export const router = Router();
 
-router.get('/', (_req, res) => {
-  res.json({ message: 'Welcome to express-mvc' });
-});
-
+router.get('/', getHome);
 router.use(healthRouter);
