@@ -1,0 +1,49 @@
+---
+description: Prefer implicit return types; omit explicit return annotations when TypeScript can infer them
+globs: **/*.ts
+alwaysApply: false
+---
+
+# TypeScript: implicit return types
+
+Prefer **implicit** return types. Let TypeScript infer the return type unless inference is wrong, ambiguous, or you need a stricter contract than inference provides.
+
+## Functions
+
+Do **not** add explicit return annotations when inference is sufficient—especially `: void` on handlers and side-effect-only functions.
+
+```typescript
+// ✅ GOOD — inferred return type
+export function getHome(_req: Request, res: Response) {
+  res.render('home', { title: 'Welcome' });
+}
+
+// ❌ BAD — unnecessary explicit void
+export function getHome(_req: Request, res: Response): void {
+  res.render('home', { title: 'Welcome' });
+}
+```
+
+Same for arrow functions and methods:
+
+```typescript
+// ✅ GOOD
+const handler = (_req: Request, res: Response) => {
+  res.json({ ok: true });
+};
+
+// ❌ BAD
+const handler = (_req: Request, res: Response): void => {
+  res.json({ ok: true });
+};
+```
+
+## When explicit return types are OK
+
+Use an explicit return type only when:
+
+- Inference is wrong or too wide (e.g. you must return a specific union or branded type)
+- The function is a public API boundary and the signature is part of the contract
+- A lint/rule requires it for that specific case
+
+Parameter types (e.g. `Request`, `Response`) stay explicit when needed for Express handlers.
