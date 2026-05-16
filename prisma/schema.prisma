@@ -6,3 +6,84 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id          Int     @id @default(autoincrement())
+  username    String  @unique @db.VarChar(100)
+  password    String  @db.VarChar(255)
+  fullName    String  @db.VarChar(200)
+  address     String  @db.VarChar(500)
+  phone       String  @db.VarChar(20)
+  accountType String  @db.VarChar(50)
+  avatar      String  @db.VarChar(500)
+
+  roles  UserRole[]
+  orders Order[]
+
+  @@map("users")
+}
+
+model Role {
+  id          Int     @id @default(autoincrement())
+  name        String  @unique @db.VarChar(100)
+  description String? @db.Text
+
+  users UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  userId Int
+  roleId Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model Order {
+  id         Int     @id @default(autoincrement())
+  totalPrice Decimal @db.Decimal(12, 2)
+  userId     Int
+
+  user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items OrderItem[]
+
+  @@index([userId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  quantity  Int
+  unitPrice Decimal @db.Decimal(12, 2)
+  orderId   Int
+  productId Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model Product {
+  id         Int     @id @default(autoincrement())
+  name       String  @db.VarChar(200)
+  price      Decimal @db.Decimal(12, 2)
+  image      String  @db.VarChar(500)
+  detailDesc String  @db.Text
+  shortDesc  String  @db.VarChar(500)
+  quantity   Int     @default(0)
+  sold       Int     @default(0)
+  factory    String  @db.VarChar(200)
+  target     String  @db.VarChar(200)
+
+  orderItems OrderItem[]
+
+  @@map("products")
+}
