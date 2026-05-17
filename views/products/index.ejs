@@ -1,0 +1,77 @@
+<%- include('../partials/head', { title: title }) %>
+    <body class="sb-nav-fixed">
+        <%- include('../partials/topnav') %>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <%- include('../partials/sidebar') %>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Products</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Products</li>
+                        </ol>
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-laptop me-1"></i> Product List</span>
+                                <a href="/admin/products/create" class="btn btn-primary btn-sm">+ Add Product</a>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Factory</th>
+                                            <th>Target</th>
+                                            <th>Price</th>
+                                            <th>Qty</th>
+                                            <th>Sold</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% products.forEach(p => { %>
+                                        <tr>
+                                            <td><%= p.id %></td>
+                                            <td>
+                                                <% if (p.image) { %>
+                                                    <img src="<%= p.image %>" alt="<%= p.name %>" width="50" height="40" class="object-fit-cover rounded">
+                                                <% } else { %>
+                                                    <i class="fas fa-image fa-2x text-secondary"></i>
+                                                <% } %>
+                                            </td>
+                                            <td><%= p.name %></td>
+                                            <td><%= p.factory %></td>
+                                            <td><%= p.target %></td>
+                                            <td>$<%= Number(p.price).toLocaleString() %></td>
+                                            <td><%= p.quantity %></td>
+                                            <td><%= p.sold %></td>
+                                            <td>
+                                                <a href="/admin/products/<%= p.id %>/edit" class="btn btn-sm btn-warning">Edit</a>
+                                                <form method="POST" action="/admin/products/<%= p.id %>/delete" class="d-inline" onsubmit="return confirm('Delete this product?')">
+                                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                        <% if (products.length === 0) { %>
+                                        <tr><td colspan="9" class="text-center text-muted">No products found.</td></tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                                <%- include('../partials/pagination', { page, totalPages, baseUrl: '/admin/products' }) %>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <%- include('../partials/footer') %>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/scripts.js"></script>
+    </body>
+</html>
