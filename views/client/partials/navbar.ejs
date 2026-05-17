@@ -8,7 +8,9 @@
             </div>
             <div class="top-link pe-2">
                 <% if (locals.user) { %>
-                <a href="/auth/logout" class="text-white"><small class="text-white mx-2">Logout (<%= locals.user.username %>)</small></a>
+                <form method="POST" action="/auth/logout" class="d-inline">
+                    <button type="submit" class="btn btn-link p-0 text-white text-decoration-none"><small class="mx-2">Logout (<%= locals.user.username %>)</small></button>
+                </form>
                 <% } else { %>
                 <a href="/auth/login" class="text-white"><small class="text-white mx-2">Login</small></a>
                 <% } %>
@@ -29,9 +31,9 @@
                     <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal">
                         <i class="fas fa-search text-primary"></i>
                     </button>
-                    <% if (locals.user) { %>
-                    <a href="/" class="my-auto" title="Admin Panel"><i class="fas fa-user-shield fa-2x text-primary"></i></a>
-                    <% } else { %>
+                    <% if (locals.user?.roles?.some(r => r.role.name === 'ADMIN')) { %>
+                    <a href="/dashboard" class="my-auto" title="Admin Panel"><i class="fas fa-user-shield fa-2x text-primary"></i></a>
+                    <% } else if (!locals.user) { %>
                     <a href="/auth/login" class="my-auto"><i class="fas fa-user fa-2x"></i></a>
                     <% } %>
                 </div>
