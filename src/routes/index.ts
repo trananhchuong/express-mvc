@@ -9,6 +9,7 @@ import { productRouter } from './product.routes.js';
 import { orderRouter } from './order.routes.js';
 import { requireAuth, requireAdmin } from '../middleware/auth.middleware.js';
 import { shopRouter } from './shop.routes.js';
+import { cartRouter } from './cart.routes.js';
 
 export const router = Router();
 
@@ -17,8 +18,11 @@ router.use(healthRouter);
 router.use(authRouter);
 router.use(shopRouter);
 
-// protected admin routes
+// auth required, not admin-only
 router.use(requireAuth);
+router.use(cartRouter);
+
+// admin only
 router.use(requireAdmin);
 router.get('/dashboard', getHome);
 router.get('/charts', getCharts);

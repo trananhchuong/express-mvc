@@ -5,6 +5,7 @@ import MySQLStore from "express-mysql-session";
 import { router } from "./routes/index.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 import { passport } from "./lib/passport.js";
+import { prisma } from "./lib/prisma.js";
 
 export const app = express();
 
@@ -43,8 +44,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((_req, res, next) => {
+app.use(async (_req, res, next) => {
   res.locals.user = _req.user;
+  if (_req.user) {
+    const cart = await prisma.cart.findUnique({ where: { userId: _req.user.id } });
+    res.locals.cartCount = cart?.sum ?? 0;
+  } else {
+    res.locals.cartCount = 0;
+  }
   next();
 });
 
