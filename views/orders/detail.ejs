@@ -38,6 +38,29 @@
                                         </p>
                                     </div>
                                 </div>
+                                <div class="card mb-4">
+                                    <div class="card-header"><i class="fas fa-edit me-1"></i> Update Status</div>
+                                    <div class="card-body">
+                                        <form method="POST" action="/admin/orders/<%= order.id %>/status">
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Order Status</label>
+                                                <select name="status" class="form-select">
+                                                    <option value="PENDING"  <%= order.status === 'PENDING'  ? 'selected' : '' %>>PENDING</option>
+                                                    <option value="COMPLETE" <%= order.status === 'COMPLETE' ? 'selected' : '' %>>COMPLETE</option>
+                                                    <option value="CANCELED" <%= order.status === 'CANCELED' ? 'selected' : '' %>>CANCELED</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label fw-semibold">Payment Status</label>
+                                                <select name="paymentStatus" class="form-select">
+                                                    <option value="UNPAID" <%= order.paymentStatus === 'UNPAID' ? 'selected' : '' %>>UNPAID</option>
+                                                    <option value="PAID"   <%= order.paymentStatus === 'PAID'   ? 'selected' : '' %>>PAID</option>
+                                                </select>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="card mb-4">

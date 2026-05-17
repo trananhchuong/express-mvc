@@ -2,6 +2,13 @@ import type { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
 import { paginate } from '../lib/pagination.js';
 
+export async function postUpdateOrderStatus(req: Request, res: Response) {
+  const id = Number(req.params.id);
+  const { status, paymentStatus } = req.body as Record<string, string>;
+  await prisma.order.update({ where: { id }, data: { status, paymentStatus } });
+  res.redirect(`/admin/orders/${id}`);
+}
+
 const LIMIT = 10;
 
 export async function getOrders(req: Request, res: Response) {
