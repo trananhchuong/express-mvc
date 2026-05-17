@@ -85,3 +85,9 @@ export async function postLogin(req: Request, res: Response) {
 export function getForgotPassword(_req: Request, res: Response) {
   res.render('auth/password', { title: 'Password Recovery' });
 }
+
+export function postLogout(req: Request, res: Response) {
+  req.session.destroy(() => {
+    res.redirect('/auth/login');
+  });
+}
