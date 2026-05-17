@@ -39,6 +39,11 @@ app.use(session({
   cookie: { httpOnly: true },
 }));
 
+app.use((req, _res, next) => {
+  _res.locals.user = req.session.user;
+  next();
+});
+
 app.use(router);
 
 app.use((_req, res) => {

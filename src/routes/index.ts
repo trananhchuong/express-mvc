@@ -4,11 +4,22 @@ import { getCharts } from '../controllers/charts.controller.js';
 import { getTables } from '../controllers/tables.controller.js';
 import { healthRouter } from './health.routes.js';
 import { authRouter } from './auth.routes.js';
+import { userRouter } from './user.routes.js';
+import { productRouter } from './product.routes.js';
+import { orderRouter } from './order.routes.js';
+import { requireAuth } from '../middleware/auth.middleware.js';
 
 export const router = Router();
 
+// unguarded
+router.use(healthRouter);
+router.use(authRouter);
+
+// protected admin routes
+router.use(requireAuth);
 router.get('/', getHome);
 router.get('/charts', getCharts);
 router.get('/tables', getTables);
-router.use(healthRouter);
-router.use(authRouter);
+router.use(userRouter);
+router.use(productRouter);
+router.use(orderRouter);
