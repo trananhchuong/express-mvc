@@ -58,6 +58,30 @@ export async function postRegister(req: Request, res: Response) {
   }
 }
 
+export async function postLogin(req: Request, res: Response) {
+  const { username, password } = req.body as { username: string; password: string };
+
+  const user = await prisma.user.findUnique({ where: { username } });
+
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    res.status(401).render('auth/login', {
+      title: 'Login',
+      error: 'Invalid username or password.',
+      username,
+    });
+    return;
+  }
+
+  req.session.user = {
+    id: user.id,
+    username: user.username,
+    fullName: user.fullName,
+    accountType: user.accountType,
+  };
+
+  res.redirect('/');
+}
+
 export function getForgotPassword(_req: Request, res: Response) {
   res.render('auth/password', { title: 'Password Recovery' });
 }
