@@ -27,7 +27,7 @@
                                             <th>Username</th>
                                             <th>Full Name</th>
                                             <th>Phone</th>
-                                            <th>Account Type</th>
+                                            <th>Role</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -45,7 +45,7 @@
                                             <td><%= user.username %></td>
                                             <td><%= user.fullName %></td>
                                             <td><%= user.phone %></td>
-                                            <td><span class="badge bg-<%= user.accountType === 'admin' ? 'danger' : 'primary' %>"><%= user.accountType %></span></td>
+                                            <td><% const roleName = user.roles[0]?.role.name ?? null; %><% if (roleName) { %><span class="badge bg-<%= roleName === 'ADMIN' ? 'danger' : 'primary' %>"><%= roleName %></span><% } else { %><span class="text-muted">—</span><% } %></td>
                                             <td>
                                                 <a href="/admin/users/<%= user.id %>/edit" class="btn btn-sm btn-warning">Edit</a>
                                                 <form method="POST" action="/admin/users/<%= user.id %>/delete" class="d-inline" onsubmit="return confirm('Delete this user?')">
@@ -55,7 +55,7 @@
                                         </tr>
                                         <% }) %>
                                         <% if (users.length === 0) { %>
-                                        <tr><td colspan="7" class="text-center text-muted">No users found.</td></tr>
+                                        <tr><td colspan="7" class="text-center text-muted py-3">No users found.</td></tr>
                                         <% } %>
                                     </tbody>
                                 </table>

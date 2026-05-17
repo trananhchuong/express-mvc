@@ -27,10 +27,13 @@
                                             <input type="text" name="fullName" class="form-control" value="<%= user.fullName %>" required>
                                         </div>
                                         <div class="col-md-6">
-                                            <label class="form-label">Account Type</label>
-                                            <select name="accountType" class="form-select">
-                                                <option value="user" <%= user.accountType === 'user' ? 'selected' : '' %>>User</option>
-                                                <option value="admin" <%= user.accountType === 'admin' ? 'selected' : '' %>>Admin</option>
+                                            <label class="form-label">Role</label>
+                                            <select name="roleId" class="form-select">
+                                                <option value="">— No role —</option>
+                                                <% const currentRoleId = user.roles[0]?.roleId ?? null; %>
+                                                <% roles.forEach(r => { %>
+                                                <option value="<%= r.id %>" <%= currentRoleId === r.id ? 'selected' : '' %>><%= r.name %></option>
+                                                <% }) %>
                                             </select>
                                         </div>
                                         <div class="col-md-6">
