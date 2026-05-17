@@ -1,0 +1,59 @@
+<%- include('./partials/head', { title: title }) %>
+
+<%- include('./partials/navbar') %>
+
+<!-- Page Header -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">My Orders</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="/">Home</a></li>
+        <li class="breadcrumb-item active text-white">My Orders</li>
+    </ol>
+</div>
+
+<!-- Orders Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <% if (orders.length === 0) { %>
+        <div class="text-center py-5">
+            <i class="fas fa-box-open fa-4x text-secondary mb-3"></i>
+            <h4 class="text-muted">You have no orders yet.</h4>
+            <a href="/shop" class="btn btn-primary rounded-pill mt-3 px-4">Start Shopping</a>
+        </div>
+        <% } else { %>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Total</th>
+                        <th>Receiver</th>
+                        <th>Payment</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% orders.forEach(o => { %>
+                    <tr>
+                        <td>#<%= o.id %></td>
+                        <td>$<%= Number(o.totalPrice).toLocaleString() %></td>
+                        <td><%= o.receiverName %></td>
+                        <td><%= o.paymentMethod %></td>
+                        <td>
+                            <span class="badge <%= o.status === 'COMPLETE' ? 'bg-success' : o.status === 'CANCELED' ? 'bg-danger' : 'bg-warning text-dark' %>">
+                                <%= o.status %>
+                            </span>
+                        </td>
+                        <td><a href="/orders/<%= o.id %>" class="btn btn-sm btn-outline-primary rounded-pill">View</a></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+        <% } %>
+    </div>
+</div>
+<!-- Orders End -->
+
+<%- include('./partials/footer') %>

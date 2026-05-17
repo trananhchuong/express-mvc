@@ -23,6 +23,21 @@
                                         <p class="mb-0"><strong>Username:</strong> <%= order.user.username %></p>
                                     </div>
                                 </div>
+                                <div class="card mb-4">
+                                    <div class="card-header"><i class="fas fa-truck me-1"></i> Delivery & Payment</div>
+                                    <div class="card-body">
+                                        <p class="mb-1"><strong>Receiver:</strong> <%= order.receiverName %></p>
+                                        <p class="mb-1"><strong>Phone:</strong> <%= order.receiverPhone %></p>
+                                        <p class="mb-1"><strong>Address:</strong> <%= order.receiverAddress %></p>
+                                        <p class="mb-1"><strong>Payment:</strong> <%= order.paymentMethod %></p>
+                                        <p class="mb-1"><strong>Payment Status:</strong> <%= order.paymentStatus %></p>
+                                        <p class="mb-0"><strong>Status:</strong>
+                                            <span class="badge <%= order.status === 'COMPLETE' ? 'bg-success' : order.status === 'CANCELED' ? 'bg-danger' : 'bg-warning text-dark' %>">
+                                                <%= order.status %>
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-8">
                                 <div class="card mb-4">

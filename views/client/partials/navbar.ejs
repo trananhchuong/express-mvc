@@ -27,10 +27,20 @@
                 <div class="navbar-nav mx-auto">
                     <a href="/shop" class="nav-item nav-link <%= locals.activeNav === 'shop' ? 'active' : '' %>">Shop</a>
                 </div>
-                <div class="d-flex m-3 me-0">
-                    <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal">
+                <div class="d-flex m-3 me-0 align-items-center gap-3">
+                    <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white" data-bs-toggle="modal" data-bs-target="#searchModal">
                         <i class="fas fa-search text-primary"></i>
                     </button>
+                    <% if (locals.user) { %>
+                    <a href="/cart" class="position-relative my-auto">
+                        <i class="fas fa-shopping-cart fa-2x text-primary"></i>
+                        <% if (locals.cartCount > 0) { %>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size:0.65rem;">
+                            <%= locals.cartCount %>
+                        </span>
+                        <% } %>
+                    </a>
+                    <% } %>
                     <% if (locals.user?.roles?.some(r => r.role.name === 'ADMIN')) { %>
                     <a href="/dashboard" class="my-auto" title="Admin Panel"><i class="fas fa-user-shield fa-2x text-primary"></i></a>
                     <% } else if (!locals.user) { %>

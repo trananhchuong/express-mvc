@@ -50,23 +50,40 @@
                             <span><i class="fas fa-check-circle me-1 text-success"></i> Sold: <strong><%= product.sold %></strong></span>
                         </div>
 
-                        <!-- Quantity selector (UI only — cart is Chapter 11) -->
-                        <div class="input-group quantity mb-4" style="width: 110px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                    <i class="fa fa-minus"></i>
-                                </button>
+                        <form method="POST" action="/cart">
+                            <input type="hidden" name="productId" value="<%= product.id %>">
+                            <input type="hidden" name="quantity" id="cartQty" value="1">
+                            <div class="input-group quantity mb-4" style="width: 110px;">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-minus rounded-circle bg-light border">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                <input type="text" id="qtyDisplay" class="form-control form-control-sm text-center border-0" value="1" readonly>
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-sm btn-plus rounded-circle bg-light border">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <input type="text" class="form-control form-control-sm text-center border-0" value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <a href="#" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
-                            <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
-                        </a>
+                            <button type="submit" class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary">
+                                <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
+                            </button>
+                        </form>
+                        <script>
+                            (function () {
+                                const qtyInput = document.getElementById('cartQty');
+                                const display = document.getElementById('qtyDisplay');
+                                document.querySelector('.btn-minus').addEventListener('click', function () {
+                                    const v = Math.max(1, parseInt(qtyInput.value) - 1);
+                                    qtyInput.value = v; display.value = v;
+                                });
+                                document.querySelector('.btn-plus').addEventListener('click', function () {
+                                    const v = parseInt(qtyInput.value) + 1;
+                                    qtyInput.value = v; display.value = v;
+                                });
+                            })();
+                        </script>
                     </div>
 
                     <!-- Description tabs -->

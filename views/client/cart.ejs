@@ -1,0 +1,99 @@
+<%- include('./partials/head', { title: title }) %>
+
+<%- include('./partials/navbar') %>
+
+<!-- Page Header -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Shopping Cart</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+        <li class="breadcrumb-item active text-white">Cart</li>
+    </ol>
+</div>
+
+<!-- Cart Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <% if (!cart || cart.details.length === 0) { %>
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x text-secondary mb-3"></i>
+            <h4 class="text-muted">Your cart is empty.</h4>
+            <a href="/shop" class="btn btn-primary rounded-pill mt-3 px-4">Continue Shopping</a>
+        </div>
+        <% } else { %>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% cart.details.forEach(d => { %>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <% if (d.product.image) { %>
+                                <img src="<%= d.product.image %>" alt="<%= d.product.name %>" style="width:60px;height:60px;object-fit:cover;" class="rounded me-3">
+                                <% } else { %>
+                                <div class="bg-light d-flex align-items-center justify-content-center rounded me-3" style="width:60px;height:60px;">
+                                    <i class="fas fa-laptop text-secondary"></i>
+                                </div>
+                                <% } %>
+                                <span><%= d.product.name %></span>
+                            </div>
+                        </td>
+                        <td class="align-middle">$<%= Number(d.price).toLocaleString() %></td>
+                        <td class="align-middle" style="width:160px;">
+                            <form method="POST" action="/cart/<%= d.id %>/update" class="d-flex align-items-center gap-2">
+                                <button type="submit" name="quantity" value="<%= d.quantity - 1 %>" class="btn btn-sm btn-outline-secondary rounded-circle" <%= d.quantity <= 1 ? 'disabled' : '' %>>
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                                <span class="fw-bold"><%= d.quantity %></span>
+                                <button type="submit" name="quantity" value="<%= d.quantity + 1 %>" class="btn btn-sm btn-outline-secondary rounded-circle">
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </form>
+                        </td>
+                        <td class="align-middle">$<%= (Number(d.price) * d.quantity).toLocaleString() %></td>
+                        <td class="align-middle">
+                            <form method="POST" action="/cart/<%= d.id %>/delete">
+                                <button type="submit" class="btn btn-sm btn-danger rounded-circle">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row justify-content-end mt-4">
+            <div class="col-md-4">
+                <div class="border rounded p-4">
+                    <h5 class="fw-bold mb-3">Cart Total</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <strong>$<%= totalPrice.toLocaleString() %></strong>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Total</span>
+                        <strong class="text-primary fs-5">$<%= totalPrice.toLocaleString() %></strong>
+                    </div>
+                    <a href="/checkout" class="btn btn-primary w-100 rounded-pill">Proceed to Checkout</a>
+                    <a href="/shop" class="btn btn-outline-secondary w-100 rounded-pill mt-2">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </div>
+</div>
+<!-- Cart End -->
+
+<%- include('./partials/footer') %>
