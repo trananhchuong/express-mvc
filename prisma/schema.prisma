@@ -19,6 +19,7 @@ model User {
 
   roles  UserRole[]
   orders Order[]
+  cart   Cart?
 
   @@map("users")
 }
@@ -44,10 +45,42 @@ model UserRole {
   @@map("user_roles")
 }
 
+model Cart {
+  id     Int @id @default(autoincrement())
+  sum    Int @default(0)
+  userId Int @unique
+
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  details CartDetail[]
+
+  @@map("carts")
+}
+
+model CartDetail {
+  id        Int     @id @default(autoincrement())
+  quantity  Int
+  price     Decimal @db.Decimal(12, 2)
+  cartId    Int
+  productId Int
+
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@index([cartId])
+  @@index([productId])
+  @@map("cart_details")
+}
+
 model Order {
-  id         Int     @id @default(autoincrement())
-  totalPrice Decimal @db.Decimal(12, 2)
-  userId     Int
+  id              Int     @id @default(autoincrement())
+  totalPrice      Decimal @db.Decimal(12, 2)
+  receiverName    String  @db.VarChar(200)
+  receiverAddress String  @db.VarChar(500)
+  receiverPhone   String  @db.VarChar(20)
+  status          String  @default("PENDING") @db.VarChar(50)
+  paymentMethod   String  @default("COD") @db.VarChar(50)
+  paymentStatus   String  @default("UNPAID") @db.VarChar(50)
+  userId          Int
 
   user  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   items OrderItem[]
@@ -83,7 +116,8 @@ model Product {
   factory    String  @db.VarChar(200)
   target     String  @db.VarChar(200)
 
-  orderItems OrderItem[]
+  orderItems  OrderItem[]
+  cartDetails CartDetail[]
 
   @@map("products")
 }
