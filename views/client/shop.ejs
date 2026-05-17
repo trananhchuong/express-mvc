@@ -1,0 +1,132 @@
+<%- include('./partials/head', { title: title }) %>
+
+<%- include('./partials/navbar') %>
+
+<!-- Page Header -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Shop</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="/shop">Home</a></li>
+        <li class="breadcrumb-item active text-white">Shop</li>
+    </ol>
+</div>
+
+<!-- Shop Start -->
+<div class="container-fluid fruite py-5">
+    <div class="container py-5">
+        <h1 class="mb-4">Laptop Shop</h1>
+        <div class="row g-4">
+            <div class="col-lg-12">
+                <!-- Search + Filter bar -->
+                <div class="row g-4 mb-3">
+                    <div class="col-xl-4">
+                        <form method="GET" action="/shop" class="input-group w-100 mx-auto d-flex">
+                            <% if (selectedTarget) { %><input type="hidden" name="target" value="<%= selectedTarget %>"><% } %>
+                            <input type="search" name="search" class="form-control p-3" placeholder="Search laptops..." value="<%= search %>">
+                            <button class="input-group-text p-3" type="submit"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Sidebar -->
+                    <div class="col-lg-3">
+                        <div class="row g-4">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <h4>Categories</h4>
+                                    <ul class="list-unstyled fruite-categorie">
+                                        <li>
+                                            <div class="d-flex justify-content-between fruite-name">
+                                                <a href="/shop<%= search ? '?search=' + encodeURIComponent(search) : '' %>">
+                                                    <i class="fas fa-laptop me-2"></i>All
+                                                </a>
+                                            </div>
+                                        </li>
+                                        <% targets.forEach(t => { %>
+                                        <li>
+                                            <div class="d-flex justify-content-between fruite-name">
+                                                <a href="/shop?target=<%= encodeURIComponent(t) %><%= search ? '&search=' + encodeURIComponent(search) : '' %>"
+                                                   class="<%= selectedTarget === t ? 'fw-bold text-primary' : '' %>">
+                                                    <i class="fas fa-laptop me-2"></i><%= t %>
+                                                </a>
+                                            </div>
+                                        </li>
+                                        <% }) %>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Grid -->
+                    <div class="col-lg-9">
+                        <div class="row g-4 justify-content-center">
+                            <% if (products.length === 0) { %>
+                            <div class="col-12 text-center py-5">
+                                <i class="fas fa-laptop fa-4x text-secondary mb-3"></i>
+                                <h4 class="text-muted">No products found.</h4>
+                                <a href="/shop" class="btn btn-primary rounded-pill mt-3">Clear filters</a>
+                            </div>
+                            <% } %>
+                            <% products.forEach(p => { %>
+                            <div class="col-md-6 col-lg-6 col-xl-4">
+                                <div class="rounded position-relative fruite-item">
+                                    <div class="fruite-img">
+                                        <% if (p.image) { %>
+                                        <img src="<%= p.image %>" class="img-fluid w-100 rounded-top" alt="<%= p.name %>" style="height:200px;object-fit:cover;">
+                                        <% } else { %>
+                                        <div class="bg-light d-flex align-items-center justify-content-center rounded-top" style="height:200px;">
+                                            <i class="fas fa-laptop fa-4x text-secondary"></i>
+                                        </div>
+                                        <% } %>
+                                    </div>
+                                    <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top:10px;left:10px;"><%= p.target %></div>
+                                    <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                                        <h4><%= p.name %></h4>
+                                        <p class="text-truncate"><%= p.shortDesc %></p>
+                                        <div class="d-flex justify-content-between flex-lg-wrap">
+                                            <p class="text-dark fs-5 fw-bold mb-0">$<%= Number(p.price).toLocaleString() %></p>
+                                            <a href="/shop/<%= p.id %>" class="btn border border-secondary rounded-pill px-3 text-primary">
+                                                <i class="fa fa-eye me-2 text-primary"></i> View Detail
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                        </div>
+
+                        <!-- Pagination -->
+                        <% if (totalPages > 1) { %>
+                        <div class="col-12 mt-4">
+                            <nav>
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
+                                        <a class="page-link" href="/shop?page=<%= page - 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>">
+                                            <i class="fa fa-angle-left"></i>
+                                        </a>
+                                    </li>
+                                    <% for (let i = 1; i <= totalPages; i++) { %>
+                                    <li class="page-item <%= i === page ? 'active' : '' %>">
+                                        <a class="page-link" href="/shop?page=<%= i %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>"><%= i %></a>
+                                    </li>
+                                    <% } %>
+                                    <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
+                                        <a class="page-link" href="/shop?page=<%= page + 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>">
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Shop End -->
+
+<%- include('./partials/footer') %>

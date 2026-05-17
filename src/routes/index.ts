@@ -8,12 +8,14 @@ import { userRouter } from './user.routes.js';
 import { productRouter } from './product.routes.js';
 import { orderRouter } from './order.routes.js';
 import { requireAuth } from '../middleware/auth.middleware.js';
+import { shopRouter } from './shop.routes.js';
 
 export const router = Router();
 
 // unguarded
 router.use(healthRouter);
 router.use(authRouter);
+router.use(shopRouter);
 
 // protected admin routes
 router.use(requireAuth);
