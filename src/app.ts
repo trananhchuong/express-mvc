@@ -1,5 +1,6 @@
 import path from "node:path";
 import express from "express";
+import session from "express-session";
 import { router } from "./routes/index.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
@@ -15,6 +16,12 @@ app.use(express.static(publicPath));
 //config req.body to parse json and urlencoded
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(session({
+  secret: process.env.SESSION_SECRET ?? 'dev-secret',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true },
+}));
 
 app.use(router);
 
