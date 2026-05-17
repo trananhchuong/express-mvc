@@ -13,5 +13,5 @@ export function requireAdmin(req: Request, res: Response, next: NextFunction) {
 export function redirectIfAuthenticated(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated()) return next();
   const isAdmin = req.user?.roles.some(r => r.role.name === 'ADMIN');
-  res.redirect(isAdmin ? '/' : '/shop');
+  res.redirect(isAdmin ? '/dashboard' : '/');
 }

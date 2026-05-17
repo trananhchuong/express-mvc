@@ -20,7 +20,7 @@ router.use(shopRouter);
 // protected admin routes
 router.use(requireAuth);
 router.use(requireAdmin);
-router.get('/', getHome);
+router.get('/dashboard', getHome);
 router.get('/charts', getCharts);
 router.get('/tables', getTables);
 router.use(userRouter);

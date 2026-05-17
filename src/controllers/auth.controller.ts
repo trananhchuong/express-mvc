@@ -72,7 +72,7 @@ export function postLogin(req: Request, res: Response, next: NextFunction) {
     req.login(user, (loginErr) => {
       if (loginErr) return next(loginErr);
       const isAdmin = user.roles.some(r => r.role.name === 'ADMIN');
-      res.redirect(isAdmin ? '/' : '/shop');
+      res.redirect(isAdmin ? '/dashboard' : '/');
     });
   })(req, res, next);
 }
