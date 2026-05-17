@@ -17,11 +17,13 @@ const productSchema = z.object({
 
 export async function getProducts(req: Request, res: Response) {
   const page = Math.max(1, Number(req.query.page) || 1);
+  const search = (req.query.search as string | undefined)?.trim() ?? '';
+  const where = search ? { name: { contains: search } } : {};
   const [total, products] = await Promise.all([
-    prisma.product.count(),
-    prisma.product.findMany({ skip: (page - 1) * LIMIT, take: LIMIT, orderBy: { id: 'asc' } }),
+    prisma.product.count({ where }),
+    prisma.product.findMany({ where, skip: (page - 1) * LIMIT, take: LIMIT, orderBy: { id: 'asc' } }),
   ]);
-  res.render('products/index', { title: 'Products', products, ...paginate(total, page, LIMIT) });
+  res.render('products/index', { title: 'Products', products, search, ...paginate(total, page, LIMIT) });
 }
 
 export function getCreateProduct(_req: Request, res: Response) {

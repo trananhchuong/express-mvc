@@ -15,47 +15,122 @@
 <div class="container-fluid fruite py-5">
     <div class="container py-5">
         <h1 class="mb-4">Laptop Shop</h1>
+        <%
+          const shopQs = [
+            search          ? 'search='   + encodeURIComponent(search)          : '',
+            selectedTarget  ? 'target='   + encodeURIComponent(selectedTarget)  : '',
+            selectedFactory ? 'factory='  + encodeURIComponent(selectedFactory) : '',
+            sort            ? 'sort='     + encodeURIComponent(sort)            : '',
+            minPrice !== '' ? 'minPrice=' + minPrice                            : '',
+            maxPrice !== '' ? 'maxPrice=' + maxPrice                            : '',
+          ].filter(Boolean).join('&');
+        %>
         <div class="row g-4">
             <div class="col-lg-12">
-                <!-- Search + Filter bar -->
-                <div class="row g-4 mb-3">
-                    <div class="col-xl-4">
-                        <form method="GET" action="/shop" class="input-group w-100 mx-auto d-flex">
-                            <% if (selectedTarget) { %><input type="hidden" name="target" value="<%= selectedTarget %>"><% } %>
+                <!-- Search + Sort bar -->
+                <div class="row g-3 mb-3 align-items-center">
+                    <div class="col-xl-5">
+                        <form method="GET" action="/" class="input-group">
+                            <% if (selectedTarget)  { %><input type="hidden" name="target"   value="<%= selectedTarget %>"><% } %>
+                            <% if (selectedFactory) { %><input type="hidden" name="factory"  value="<%= selectedFactory %>"><% } %>
+                            <% if (sort)            { %><input type="hidden" name="sort"     value="<%= sort %>"><% } %>
+                            <% if (minPrice !== '') { %><input type="hidden" name="minPrice" value="<%= minPrice %>"><% } %>
+                            <% if (maxPrice !== '') { %><input type="hidden" name="maxPrice" value="<%= maxPrice %>"><% } %>
                             <input type="search" name="search" class="form-control p-3" placeholder="Search laptops..." value="<%= search %>">
                             <button class="input-group-text p-3" type="submit"><i class="fa fa-search"></i></button>
                         </form>
                     </div>
+                    <div class="col-xl-3">
+                        <form method="GET" action="/" class="d-flex align-items-center gap-2">
+                            <% if (search)          { %><input type="hidden" name="search"   value="<%= search %>"><% } %>
+                            <% if (selectedTarget)  { %><input type="hidden" name="target"   value="<%= selectedTarget %>"><% } %>
+                            <% if (selectedFactory) { %><input type="hidden" name="factory"  value="<%= selectedFactory %>"><% } %>
+                            <% if (minPrice !== '') { %><input type="hidden" name="minPrice" value="<%= minPrice %>"><% } %>
+                            <% if (maxPrice !== '') { %><input type="hidden" name="maxPrice" value="<%= maxPrice %>"><% } %>
+                            <label class="text-nowrap mb-0 text-muted small">Sort by:</label>
+                            <select name="sort" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value=""           <%= sort === ''           ? 'selected' : '' %>>Default</option>
+                                <option value="price-asc"  <%= sort === 'price-asc'  ? 'selected' : '' %>>Price: Low → High</option>
+                                <option value="price-desc" <%= sort === 'price-desc' ? 'selected' : '' %>>Price: High → Low</option>
+                                <option value="name-asc"   <%= sort === 'name-asc'   ? 'selected' : '' %>>Name: A → Z</option>
+                                <option value="name-desc"  <%= sort === 'name-desc'  ? 'selected' : '' %>>Name: Z → A</option>
+                            </select>
+                        </form>
+                    </div>
+                    <% if (shopQs) { %>
+                    <div class="col-auto">
+                        <a href="/" class="btn btn-sm btn-outline-secondary rounded-pill">Clear filters</a>
+                    </div>
+                    <% } %>
                 </div>
 
                 <div class="row g-4">
                     <!-- Sidebar -->
                     <div class="col-lg-3">
-                        <div class="row g-4">
-                            <div class="col-lg-12">
-                                <div class="mb-3">
-                                    <h4>Categories</h4>
-                                    <ul class="list-unstyled fruite-categorie">
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="/shop<%= search ? '?search=' + encodeURIComponent(search) : '' %>">
-                                                    <i class="fas fa-laptop me-2"></i>All
-                                                </a>
-                                            </div>
-                                        </li>
-                                        <% targets.forEach(t => { %>
-                                        <li>
-                                            <div class="d-flex justify-content-between fruite-name">
-                                                <a href="/shop?target=<%= encodeURIComponent(t) %><%= search ? '&search=' + encodeURIComponent(search) : '' %>"
-                                                   class="<%= selectedTarget === t ? 'fw-bold text-primary' : '' %>">
-                                                    <i class="fas fa-laptop me-2"></i><%= t %>
-                                                </a>
-                                            </div>
-                                        </li>
-                                        <% }) %>
-                                    </ul>
+                        <!-- Categories -->
+                        <div class="mb-4">
+                            <h4>Categories</h4>
+                            <ul class="list-unstyled fruite-categorie">
+                                <li>
+                                    <div class="d-flex fruite-name">
+                                        <a href="/<%= search || selectedFactory || sort || minPrice !== '' || maxPrice !== '' ? '?' + [search ? 'search='+encodeURIComponent(search) : '', selectedFactory ? 'factory='+encodeURIComponent(selectedFactory) : '', sort ? 'sort='+encodeURIComponent(sort) : '', minPrice !== '' ? 'minPrice='+minPrice : '', maxPrice !== '' ? 'maxPrice='+maxPrice : ''].filter(Boolean).join('&') : '' %>"
+                                           class="<%= !selectedTarget ? 'fw-bold text-primary' : '' %>">
+                                            <i class="fas fa-laptop me-2"></i>All Categories
+                                        </a>
+                                    </div>
+                                </li>
+                                <% targets.forEach(t => { %>
+                                <li>
+                                    <div class="d-flex fruite-name">
+                                        <a href="/?target=<%= encodeURIComponent(t) %><%= search ? '&search='+encodeURIComponent(search) : '' %><%= selectedFactory ? '&factory='+encodeURIComponent(selectedFactory) : '' %><%= sort ? '&sort='+encodeURIComponent(sort) : '' %><%= minPrice !== '' ? '&minPrice='+minPrice : '' %><%= maxPrice !== '' ? '&maxPrice='+maxPrice : '' %>"
+                                           class="<%= selectedTarget === t ? 'fw-bold text-primary' : '' %>">
+                                            <i class="fas fa-laptop me-2"></i><%= t %>
+                                        </a>
+                                    </div>
+                                </li>
+                                <% }) %>
+                            </ul>
+                        </div>
+
+                        <!-- Brands -->
+                        <div class="mb-4">
+                            <h4>Brands</h4>
+                            <ul class="list-unstyled fruite-categorie">
+                                <li>
+                                    <div class="d-flex fruite-name">
+                                        <a href="/<%= search || selectedTarget || sort || minPrice !== '' || maxPrice !== '' ? '?' + [search ? 'search='+encodeURIComponent(search) : '', selectedTarget ? 'target='+encodeURIComponent(selectedTarget) : '', sort ? 'sort='+encodeURIComponent(sort) : '', minPrice !== '' ? 'minPrice='+minPrice : '', maxPrice !== '' ? 'maxPrice='+maxPrice : ''].filter(Boolean).join('&') : '' %>"
+                                           class="<%= !selectedFactory ? 'fw-bold text-primary' : '' %>">
+                                            <i class="fas fa-tag me-2"></i>All Brands
+                                        </a>
+                                    </div>
+                                </li>
+                                <% factories.forEach(f => { %>
+                                <li>
+                                    <div class="d-flex fruite-name">
+                                        <a href="/?factory=<%= encodeURIComponent(f) %><%= search ? '&search='+encodeURIComponent(search) : '' %><%= selectedTarget ? '&target='+encodeURIComponent(selectedTarget) : '' %><%= sort ? '&sort='+encodeURIComponent(sort) : '' %><%= minPrice !== '' ? '&minPrice='+minPrice : '' %><%= maxPrice !== '' ? '&maxPrice='+maxPrice : '' %>"
+                                           class="<%= selectedFactory === f ? 'fw-bold text-primary' : '' %>">
+                                            <i class="fas fa-tag me-2"></i><%= f %>
+                                        </a>
+                                    </div>
+                                </li>
+                                <% }) %>
+                            </ul>
+                        </div>
+
+                        <!-- Price Range -->
+                        <div class="mb-4">
+                            <h4>Price Range</h4>
+                            <form method="GET" action="/">
+                                <% if (search)          { %><input type="hidden" name="search"  value="<%= search %>"><% } %>
+                                <% if (selectedTarget)  { %><input type="hidden" name="target"  value="<%= selectedTarget %>"><% } %>
+                                <% if (selectedFactory) { %><input type="hidden" name="factory" value="<%= selectedFactory %>"><% } %>
+                                <% if (sort)            { %><input type="hidden" name="sort"    value="<%= sort %>"><% } %>
+                                <div class="d-flex gap-2 mb-2">
+                                    <input type="number" name="minPrice" class="form-control form-control-sm" placeholder="Min $" value="<%= minPrice %>" min="0">
+                                    <input type="number" name="maxPrice" class="form-control form-control-sm" placeholder="Max $" value="<%= maxPrice %>" min="0">
                                 </div>
-                            </div>
+                                <button type="submit" class="btn btn-sm btn-primary w-100 rounded-pill">Apply</button>
+                            </form>
                         </div>
                     </div>
 
@@ -66,7 +141,7 @@
                             <div class="col-12 text-center py-5">
                                 <i class="fas fa-laptop fa-4x text-secondary mb-3"></i>
                                 <h4 class="text-muted">No products found.</h4>
-                                <a href="/shop" class="btn btn-primary rounded-pill mt-3">Clear filters</a>
+                                <a href="/" class="btn btn-primary rounded-pill mt-3">Clear filters</a>
                             </div>
                             <% } %>
                             <% products.forEach(p => { %>
@@ -102,13 +177,13 @@
                         <div class="col-12 mt-4 text-center">
                             <div class="pagination">
                                 <% if (page > 1) { %>
-                                <a href="/?page=<%= page - 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>"><i class="fa fa-angle-left"></i></a>
+                                <a href="/?<%= shopQs ? shopQs + '&' : '' %>page=<%= page - 1 %>"><i class="fa fa-angle-left"></i></a>
                                 <% } %>
                                 <% for (let i = 1; i <= totalPages; i++) { %>
-                                <a href="/?page=<%= i %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+                                <a href="/?<%= shopQs ? shopQs + '&' : '' %>page=<%= i %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
                                 <% } %>
                                 <% if (page < totalPages) { %>
-                                <a href="/?page=<%= page + 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>"><i class="fa fa-angle-right"></i></a>
+                                <a href="/?<%= shopQs ? shopQs + '&' : '' %>page=<%= page + 1 %>"><i class="fa fa-angle-right"></i></a>
                                 <% } %>
                             </div>
                         </div>

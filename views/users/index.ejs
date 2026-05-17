@@ -14,9 +14,15 @@
                             <li class="breadcrumb-item active">Users</li>
                         </ol>
                         <div class="card mb-4">
-                            <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
                                 <span><i class="fas fa-users me-1"></i> User List</span>
-                                <a href="/admin/users/create" class="btn btn-primary btn-sm">+ Add User</a>
+                                <div class="d-flex gap-2 align-items-center">
+                                    <form method="GET" action="/admin/users" class="d-flex gap-2">
+                                        <input type="search" name="search" class="form-control form-control-sm" placeholder="Search users..." value="<%= search %>" style="width:200px;">
+                                        <button class="btn btn-sm btn-outline-secondary">Search</button>
+                                    </form>
+                                    <a href="/admin/users/create" class="btn btn-primary btn-sm">+ Add User</a>
+                                </div>
                             </div>
                             <div class="card-body">
                                 <table class="table table-bordered table-hover">
@@ -59,7 +65,7 @@
                                         <% } %>
                                     </tbody>
                                 </table>
-                                <%- include('../partials/pagination', { page, totalPages, baseUrl: '/admin/users' }) %>
+                                <%- include('../partials/pagination', { page, totalPages, baseUrl: '/admin/users', qs: search ? 'search=' + encodeURIComponent(search) : '' }) %>
                             </div>
                         </div>
                     </div>

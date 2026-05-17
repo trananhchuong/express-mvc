@@ -11,16 +11,21 @@ const userWithRoles = {
 
 export async function getUsers(req: Request, res: Response) {
   const page = Math.max(1, Number(req.query.page) || 1);
+  const search = (req.query.search as string | undefined)?.trim() ?? '';
+  const where = search
+    ? { OR: [{ username: { contains: search } }, { fullName: { contains: search } }] }
+    : {};
   const [total, users] = await Promise.all([
-    prisma.user.count(),
+    prisma.user.count({ where }),
     prisma.user.findMany({
+      where,
       skip: (page - 1) * LIMIT,
       take: LIMIT,
       orderBy: { id: 'asc' },
       include: userWithRoles,
     }),
   ]);
-  res.render('users/index', { title: 'Users', users, ...paginate(total, page, LIMIT) });
+  res.render('users/index', { title: 'Users', users, search, ...paginate(total, page, LIMIT) });
 }
 
 export async function getCreateUser(_req: Request, res: Response) {
