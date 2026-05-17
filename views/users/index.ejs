@@ -1,0 +1,73 @@
+<%- include('../partials/head', { title: title }) %>
+    <body class="sb-nav-fixed">
+        <%- include('../partials/topnav') %>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <%- include('../partials/sidebar') %>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Users</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                            <li class="breadcrumb-item active">Users</li>
+                        </ol>
+                        <div class="card mb-4">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span><i class="fas fa-users me-1"></i> User List</span>
+                                <a href="/admin/users/create" class="btn btn-primary btn-sm">+ Add User</a>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Avatar</th>
+                                            <th>Username</th>
+                                            <th>Full Name</th>
+                                            <th>Phone</th>
+                                            <th>Account Type</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% users.forEach(user => { %>
+                                        <tr>
+                                            <td><%= user.id %></td>
+                                            <td>
+                                                <% if (user.avatar) { %>
+                                                    <img src="<%= user.avatar %>" alt="avatar" width="40" height="40" class="rounded-circle object-fit-cover">
+                                                <% } else { %>
+                                                    <i class="fas fa-user-circle fa-2x text-secondary"></i>
+                                                <% } %>
+                                            </td>
+                                            <td><%= user.username %></td>
+                                            <td><%= user.fullName %></td>
+                                            <td><%= user.phone %></td>
+                                            <td><span class="badge bg-<%= user.accountType === 'admin' ? 'danger' : 'primary' %>"><%= user.accountType %></span></td>
+                                            <td>
+                                                <a href="/admin/users/<%= user.id %>/edit" class="btn btn-sm btn-warning">Edit</a>
+                                                <form method="POST" action="/admin/users/<%= user.id %>/delete" class="d-inline" onsubmit="return confirm('Delete this user?')">
+                                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                        <% if (users.length === 0) { %>
+                                        <tr><td colspan="7" class="text-center text-muted">No users found.</td></tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                                <%- include('../partials/pagination', { page, totalPages, baseUrl: '/admin/users' }) %>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+                <%- include('../partials/footer') %>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/scripts.js"></script>
+    </body>
+</html>

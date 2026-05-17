@@ -37,6 +37,19 @@
                                     </div>
                                 </nav>
                             </div>
+                            <div class="sb-sidenav-menu-heading">Admin</div>
+                            <a class="nav-link" href="/admin/users">
+                                <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                                Users
+                            </a>
+                            <a class="nav-link" href="/admin/products">
+                                <div class="sb-nav-link-icon"><i class="fas fa-laptop"></i></div>
+                                Products
+                            </a>
+                            <a class="nav-link" href="/admin/orders">
+                                <div class="sb-nav-link-icon"><i class="fas fa-shopping-cart"></i></div>
+                                Orders
+                            </a>
                             <div class="sb-sidenav-menu-heading">Addons</div>
                             <a class="nav-link" href="/charts">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
@@ -50,6 +63,6 @@
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        Start Bootstrap
+                        <%= locals.user?.username ?? 'Guest' %>
                     </div>
                 </nav>
