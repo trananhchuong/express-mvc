@@ -1,6 +1,7 @@
 import path from "node:path";
 import express from "express";
 import session from "express-session";
+import MySQLStore from "express-mysql-session";
 import { router } from "./routes/index.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
@@ -16,10 +17,25 @@ app.use(express.static(publicPath));
 //config req.body to parse json and urlencoded
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const SessionStore = MySQLStore(session);
+
+const sessionStore = new SessionStore({
+  host: process.env.DB_HOST ?? 'localhost',
+  port: Number(process.env.DB_PORT ?? 3306),
+  user: process.env.DB_USER ?? 'root',
+  password: process.env.DB_PASSWORD ?? '',
+  database: process.env.DB_NAME ?? 'laptop_shop',
+  createDatabaseTable: true,
+  clearExpired: true,
+  checkExpirationInterval: 900_000,
+  expiration: 86_400_000,
+});
+
 app.use(session({
   secret: process.env.SESSION_SECRET ?? 'dev-secret',
   resave: false,
   saveUninitialized: false,
+  store: sessionStore,
   cookie: { httpOnly: true },
 }));
 
