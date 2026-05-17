@@ -19,13 +19,13 @@
     </div>
     <div class="container px-0">
         <nav class="navbar navbar-light bg-white navbar-expand-xl">
-            <a href="/shop" class="navbar-brand"><h1 class="text-primary display-6">Laptop Shop</h1></a>
+            <a href="/" class="navbar-brand"><h1 class="text-primary display-6">Laptop Shop</h1></a>
             <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars text-primary"></span>
             </button>
             <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                 <div class="navbar-nav mx-auto">
-                    <a href="/shop" class="nav-item nav-link <%= locals.activeNav === 'shop' ? 'active' : '' %>">Shop</a>
+                    <a href="/" class="nav-item nav-link <%= locals.activeNav === 'shop' ? 'active' : '' %>">Shop</a>
                 </div>
                 <div class="d-flex m-3 me-0 align-items-center gap-3">
                     <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white" data-bs-toggle="modal" data-bs-target="#searchModal">
@@ -43,7 +43,9 @@
                     <% } %>
                     <% if (locals.user?.roles?.some(r => r.role.name === 'ADMIN')) { %>
                     <a href="/dashboard" class="my-auto" title="Admin Panel"><i class="fas fa-user-shield fa-2x text-primary"></i></a>
-                    <% } else if (!locals.user) { %>
+                    <% } else if (locals.user) { %>
+                    <a href="/orders" class="my-auto" title="My Orders"><i class="fas fa-receipt fa-2x text-primary"></i></a>
+                    <% } else { %>
                     <a href="/auth/login" class="my-auto"><i class="fas fa-user fa-2x"></i></a>
                     <% } %>
                 </div>
@@ -61,7 +63,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body d-flex align-items-center">
-                <form class="input-group w-75 mx-auto d-flex" method="GET" action="/shop">
+                <form class="input-group w-75 mx-auto d-flex" method="GET" action="/">
                     <input type="search" name="search" class="form-control p-3" placeholder="Search laptops..." value="<%= locals.search ?? '' %>">
                     <button class="input-group-text p-3" type="submit"><i class="fa fa-search"></i></button>
                 </form>
