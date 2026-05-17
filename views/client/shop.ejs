@@ -99,26 +99,18 @@
 
                         <!-- Pagination -->
                         <% if (totalPages > 1) { %>
-                        <div class="col-12 mt-4">
-                            <nav>
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item <%= page <= 1 ? 'disabled' : '' %>">
-                                        <a class="page-link" href="/shop?page=<%= page - 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>">
-                                            <i class="fa fa-angle-left"></i>
-                                        </a>
-                                    </li>
-                                    <% for (let i = 1; i <= totalPages; i++) { %>
-                                    <li class="page-item <%= i === page ? 'active' : '' %>">
-                                        <a class="page-link" href="/shop?page=<%= i %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>"><%= i %></a>
-                                    </li>
-                                    <% } %>
-                                    <li class="page-item <%= page >= totalPages ? 'disabled' : '' %>">
-                                        <a class="page-link" href="/shop?page=<%= page + 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>">
-                                            <i class="fa fa-angle-right"></i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
+                        <div class="col-12 mt-4 text-center">
+                            <div class="pagination">
+                                <% if (page > 1) { %>
+                                <a href="/?page=<%= page - 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>"><i class="fa fa-angle-left"></i></a>
+                                <% } %>
+                                <% for (let i = 1; i <= totalPages; i++) { %>
+                                <a href="/?page=<%= i %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>" class="<%= i === page ? 'active' : '' %>"><%= i %></a>
+                                <% } %>
+                                <% if (page < totalPages) { %>
+                                <a href="/?page=<%= page + 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= selectedTarget ? '&target=' + encodeURIComponent(selectedTarget) : '' %>"><i class="fa fa-angle-right"></i></a>
+                                <% } %>
+                            </div>
                         </div>
                         <% } %>
                     </div>
