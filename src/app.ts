@@ -4,6 +4,7 @@ import session from "express-session";
 import MySQLStore from "express-mysql-session";
 import { router } from "./routes/index.js";
 import { errorHandler } from "./middleware/error.middleware.js";
+import { passport } from "./lib/passport.js";
 
 export const app = express();
 
@@ -39,8 +40,11 @@ app.use(session({
   cookie: { httpOnly: true },
 }));
 
-app.use((req, _res, next) => {
-  _res.locals.user = req.session.user;
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use((_req, res, next) => {
+  res.locals.user = _req.user;
   next();
 });
 

@@ -1,6 +1,7 @@
-import type { Request, Response } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
 import { prisma } from '../lib/prisma.js';
+import { passport } from '../lib/passport.js';
 
 export function getLogin(_req: Request, res: Response) {
   res.render('auth/login', { title: 'Login' });
@@ -58,36 +59,31 @@ export async function postRegister(req: Request, res: Response) {
   }
 }
 
-export async function postLogin(req: Request, res: Response) {
-  const { username, password } = req.body as { username: string; password: string };
-
-  const user = await prisma.user.findUnique({ where: { username } });
-
-  if (!user || !(await bcrypt.compare(password, user.password))) {
-    res.status(401).render('auth/login', {
-      title: 'Login',
-      error: 'Invalid username or password.',
-      username,
+export function postLogin(req: Request, res: Response, next: NextFunction) {
+  passport.authenticate('local', (err: unknown, user: Express.User | false, info: { message: string }) => {
+    if (err) return next(err);
+    if (!user) {
+      return res.status(401).render('auth/login', {
+        title: 'Login',
+        error: info?.message ?? 'Invalid credentials.',
+        username: req.body.username,
+      });
+    }
+    req.login(user, (loginErr) => {
+      if (loginErr) return next(loginErr);
+      const isAdmin = user.roles.some(r => r.role.name === 'ADMIN');
+      res.redirect(isAdmin ? '/' : '/shop');
     });
-    return;
-  }
-
-  req.session.user = {
-    id: user.id,
-    username: user.username,
-    fullName: user.fullName,
-    accountType: user.accountType,
-  };
-
-  res.redirect('/');
+  })(req, res, next);
 }
 
 export function getForgotPassword(_req: Request, res: Response) {
   res.render('auth/password', { title: 'Password Recovery' });
 }
 
-export function postLogout(req: Request, res: Response) {
-  req.session.destroy(() => {
+export function postLogout(req: Request, res: Response, next: NextFunction) {
+  req.logout((err) => {
+    if (err) return next(err);
     res.redirect('/auth/login');
   });
 }

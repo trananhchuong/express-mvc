@@ -7,7 +7,7 @@ import { authRouter } from './auth.routes.js';
 import { userRouter } from './user.routes.js';
 import { productRouter } from './product.routes.js';
 import { orderRouter } from './order.routes.js';
-import { requireAuth } from '../middleware/auth.middleware.js';
+import { requireAuth, requireAdmin } from '../middleware/auth.middleware.js';
 import { shopRouter } from './shop.routes.js';
 
 export const router = Router();
@@ -19,6 +19,7 @@ router.use(shopRouter);
 
 // protected admin routes
 router.use(requireAuth);
+router.use(requireAdmin);
 router.get('/', getHome);
 router.get('/charts', getCharts);
 router.get('/tables', getTables);
