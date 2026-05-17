@@ -1,0 +1,78 @@
+<%- include('../partials/head', { title: title }) %>
+    <body class="sb-nav-fixed">
+        <%- include('../partials/topnav') %>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <%- include('../partials/sidebar') %>
+            </div>
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        <h1 class="mt-4">Order #<%= order.id %></h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="/admin/orders">Orders</a></li>
+                            <li class="breadcrumb-item active">#<%= order.id %></li>
+                        </ol>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card mb-4">
+                                    <div class="card-header"><i class="fas fa-user me-1"></i> Customer Info</div>
+                                    <div class="card-body">
+                                        <p class="mb-1"><strong>Name:</strong> <%= order.user.fullName %></p>
+                                        <p class="mb-0"><strong>Username:</strong> <%= order.user.username %></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card mb-4">
+                                    <div class="card-header"><i class="fas fa-box me-1"></i> Order Items</div>
+                                    <div class="card-body">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Image</th>
+                                                    <th>Product</th>
+                                                    <th>Unit Price</th>
+                                                    <th>Quantity</th>
+                                                    <th>Subtotal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <% order.items.forEach(item => { %>
+                                                <tr>
+                                                    <td>
+                                                        <% if (item.product.image) { %>
+                                                            <img src="<%= item.product.image %>" alt="<%= item.product.name %>" width="50" height="40" class="object-fit-cover rounded">
+                                                        <% } else { %>
+                                                            <i class="fas fa-image fa-2x text-secondary"></i>
+                                                        <% } %>
+                                                    </td>
+                                                    <td><%= item.product.name %></td>
+                                                    <td>$<%= Number(item.unitPrice).toLocaleString() %></td>
+                                                    <td><%= item.quantity %></td>
+                                                    <td>$<%= (Number(item.unitPrice) * item.quantity).toLocaleString() %></td>
+                                                </tr>
+                                                <% }) %>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="4" class="text-end fw-bold">Total</td>
+                                                    <td class="fw-bold">$<%= Number(order.totalPrice).toLocaleString() %></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/admin/orders" class="btn btn-secondary">← Back to Orders</a>
+                    </div>
+                </main>
+                <%- include('../partials/footer') %>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/scripts.js"></script>
+    </body>
+</html>
